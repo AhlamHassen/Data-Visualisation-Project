@@ -3,8 +3,8 @@ function init() {
 
     //dimensions
     const margin = { top: 30, right: 40, bottom: 70, left: 20 };
-    const width = 750 - margin.right - margin.left;
-    const height = 540 - margin.top - margin.bottom;
+    const width = 650 - margin.right - margin.left;
+    const height = 530 - margin.top - margin.bottom;
 
     //format date
     formatDate = d3.timeFormat("%Y");
@@ -30,8 +30,8 @@ function init() {
             //gas production
             gasProd: parseFloat(d.gas_production),
 
-            //hydro production
-            hydroProd: parseFloat(d.hydro_consumption),
+            //hydro consumption
+            hydroCons: parseFloat(d.hydro_consumption),
 
             //oil consumption
             oilCons: parseFloat(d.oil_consumption),
@@ -51,7 +51,7 @@ function init() {
         MultiLineChart(dataset);
 
         //to check if the dataset has been imported
-        //console.table(dataset, ["date", "coalCons", "coalProd", "elecProd", "gasCons", "gasProd", "hydroProd", "oilCons", "oilProd", "solarCons", "windCons"]);
+        //console.table(dataset, ["date", "coalCons", "coalProd", "elecProd", "gasCons", "gasProd", "hydroCons", "oilCons", "oilProd", "solarCons", "windCons"]);
     });
 
     function MultiLineChart() {
@@ -63,11 +63,22 @@ function init() {
             .append('g')
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        // //append header group
-        // header = svg.append('g')
-        // .attr("class", "chartHeader")
-        // .append("text");
-        // header.append("tspan").text("Australian Energy Production and Consumption");
+        //append header group
+        header = svg.append('g')
+            .attr("class", "chartHeader")
+            .attr("class", "mainHeader")
+            .attr("transform", "translate(23," + -margin.top * 0.5 + ")")
+            .append("text");
+
+        //append text to header group
+        header.append("tspan")
+            .text("Australian Energy Consumption by Energy Source");
+
+        header.append("tspan")
+            .attr("class", "subHeading")
+            .attr("x", 0)
+            .attr("y", 15)
+            .text("Measured in Terawatt hour (TWh) from 2000-2019")
 
 
         //x scale setup
@@ -75,7 +86,7 @@ function init() {
             .domain([
                 d3.min(dataset, function (d) { return d.date; }),
                 d3.max(dataset, function (d) { return d.date; })])
-            .nice() //the first x-axis label was not showing before adding this
+            .nice() //makes scale end in round number, in this case will end in 2020 instead of 2019
             .range([0, width]);
 
         //defining x axis
@@ -86,9 +97,10 @@ function init() {
         //y scale setup
         yScale = d3.scaleLinear()
             .domain([0, d3.max(dataset, function (d) {
-                return Math.max(d.coalCons, d.coalProd, d.elecPrdo, d.gasCons, d.gasProd, d.hydroProd, d.oilCons, d.oilProd, d.solarCons, d.windCons)
+                //finds the max value from all columns/attributes
+                return Math.max(d.coalCons, d.gasCons, d.hydroCons, d.oilCons, d.solarCons, d.windCons)
             })])
-            .nice() // makes scale end in round number
+            .nice() //makes scale end in round number
             .range([height, 0]);
 
         //defining y axis
@@ -118,10 +130,80 @@ function init() {
         svg.append("path")
             .datum(dataset)
             .attr("class", "coalConsLine")
+            .attr("class", "consLines")
             .attr("transform", "translate(" + margin.left + ", 0)")
             .attr("d", coalConsLine)
-            .style("fill", "none")
-            .style("stroke", "red");
+            .style("stroke", "#010E13");
+
+        //gas energy consumption line genetator        
+        gasConsLine = d3.line()
+            .x(function (d) { return xScale(d.date); })
+            .y(function (d) { return yScale(d.gasCons); });
+
+        //Creating the gas energy consumption line
+        svg.append("path")
+            .datum(dataset)
+            .attr("class", "gasConsLine")
+            .attr("class", "consLines")
+            .attr("transform", "translate(" + margin.left + ", 0)")
+            .attr("d", gasConsLine)
+            .style("stroke", "#ffa600");
+
+        //hydro energy consumption line genetator        
+        hydroConsLine = d3.line()
+            .x(function (d) { return xScale(d.date); })
+            .y(function (d) { return yScale(d.hydroCons); });
+
+        //Creating the hydro energy consumption line
+        svg.append("path")
+            .datum(dataset)
+            .attr("class", "hydroConsLine")
+            .attr("class", "consLines")
+            .attr("transform", "translate(" + margin.left + ", 0)")
+            .attr("d", hydroConsLine)
+            .style("stroke", "#EF3E36");
+
+        //Oil energy consumption line genetator        
+        oilConsLine = d3.line()
+            .x(function (d) { return xScale(d.date); })
+            .y(function (d) { return yScale(d.oilCons); });
+
+        //Creating the oil energy consumption line
+        svg.append("path")
+            .datum(dataset)
+            .attr("class", "oilConsLine")
+            .attr("class", "consLines")
+            .attr("transform", "translate(" + margin.left + ", 0)")
+            .attr("d", oilConsLine)
+            .style("stroke", "#FFF275");
+
+        //Solar energy consumption line genetator        
+        solarConsLine = d3.line()
+            .x(function (d) { return xScale(d.date); })
+            .y(function (d) { return yScale(d.solarCons); });
+
+        //Creating the oil energy consumption line
+        svg.append("path")
+            .datum(dataset)
+            .attr("class", "solarConsLine")
+            .attr("class", "consLines")
+            .attr("transform", "translate(" + margin.left + ", 0)")
+            .attr("d", solarConsLine)
+            .style("stroke", "#0B6E4F");
+
+        //Wind energy consumption line genetator        
+        windConsLine = d3.line()
+            .x(function (d) { return xScale(d.date); })
+            .y(function (d) { return yScale(d.windCons); });
+
+        //Creating the wind energy consumption line
+        svg.append("path")
+            .datum(dataset)
+            .attr("class", "windConsLine")
+            .attr("class", "consLines")
+            .attr("transform", "translate(" + margin.left + ", 0)")
+            .attr("d", windConsLine)
+            .style("stroke", "#17BEBB");
 
     }
 
