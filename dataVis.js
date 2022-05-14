@@ -2,7 +2,7 @@ function init() {
     var formatDate, dataset, header, xScale, yScale, xAxis, yAxis, svg, coalConsLine;
 
     //dimensions
-    const margin = { top: 30, right: 40, bottom: 70, left: 40 };
+    const margin = { top: 30, right: 40, bottom: 70, left: 20 };
     const width = 750 - margin.right - margin.left;
     const height = 540 - margin.top - margin.bottom;
 
@@ -59,23 +59,31 @@ function init() {
         svg = d3.select("body")
             .append("svg")
             .attr("width", width + margin.right + margin.left)
-            .attr("height", height + margin.top + margin.bottom);
+            .attr("height", height + margin.top + margin.bottom)
+            .append('g')
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
         // //append header group
         // header = svg.append('g')
         // .attr("class", "chartHeader")
         // .append("text");
-
         // header.append("tspan").text("Australian Energy Production and Consumption");
 
 
-        //x and y scale setup
+        //x scale setup
         xScale = d3.scaleTime()
             .domain([
                 d3.min(dataset, function (d) { return d.date; }),
                 d3.max(dataset, function (d) { return d.date; })])
+            .nice() //the first x-axis label was not showing before adding this
             .range([0, width]);
 
+        //defining x axis
+        xAxis = d3.axisBottom()
+            .ticks(d3.timeYear.every(1))
+            .scale(xScale);
+
+        //y scale setup
         yScale = d3.scaleLinear()
             .domain([0, d3.max(dataset, function (d) {
                 return Math.max(d.coalCons, d.coalProd, d.elecPrdo, d.gasCons, d.gasProd, d.hydroProd, d.oilCons, d.oilProd, d.solarCons, d.windCons)
@@ -83,24 +91,22 @@ function init() {
             .nice() // makes scale end in round number
             .range([height, 0]);
 
-        //defining x and y axis
-        xAxis = d3.axisBottom()
-            .ticks(d3.timeYear.every(1))
-            .scale(xScale);
-
+        //defining y axis
         yAxis = d3.axisLeft()
             .ticks(10)
             .scale(yScale);
 
-        //call on x & y axis
+        //call on x axis
         svg.append("g")
             .attr("class", "axis")
+            .attr("class", "Xaxis")
             .attr("transform", "translate(" + margin.left + "," + height + ")") //place x axes on the bottom
             .call(xAxis);
 
+        //call on y axis
         svg.append("g")
             .attr("class", "axis")
-            .attr("transform", "translate(" + margin.left + ", 0)") //place y axis on the side
+            .attr("transform", "translate(" + margin.left + ", 0)") //place y axis on the left side
             .call(yAxis);
 
         //coal energy consumption line genetator        
@@ -112,7 +118,11 @@ function init() {
         svg.append("path")
             .datum(dataset)
             .attr("class", "coalConsLine")
-            .attr("d", coalConsLine);
+            .attr("transform", "translate(" + margin.left + ", 0)")
+            .attr("d", coalConsLine)
+            .style("fill", "none")
+            .style("stroke", "red");
+
     }
 
 }
