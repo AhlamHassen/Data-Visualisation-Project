@@ -1,7 +1,8 @@
 #chartContainer{
-    width: 900px;
-    height: 500px;
+    width: 700px;
+    height: 490px;
     border: 1px solid black;
+    padding-top: 10px;
 }
 
 .axis path,
@@ -10,7 +11,7 @@
     shape-rendering: crispEdges;
 }
 
-.axis text {
+.axis, .yAxis{
     font-family: sans-serif;
     font-size: 11px;
 }
@@ -21,9 +22,41 @@
 }
 
 .mainHeader{
-    font-size: 1.5em;
+    font-size: 1.45em;
 }
 
 .subHeading{
     font-size: 0.6em;
+}
+
+.toolTip{
+    position: fixed;
+    opacity: 0;
+    pointer-events: none;
+    padding: 3px;
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #ccc;
+    border-radius: 5px;
+    background-color: rgba(255, 230, 197, 0.849);
+}
+
+/* .coalConsRect{
+    stroke: aqua;
+    stroke-width: 2px;
+}
+
+.coalConsText{
+    text-decoration: underline;
+} */
+
+.legendText, .legendRects{
+    cursor: pointer;
+}
+
+/* .coalConsLine{
+    display: none;
+} */
+
+.greenNode{
+    display: none;
 }
