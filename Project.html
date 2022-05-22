@@ -1,27 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<title>Australian Energy Production and Consumption</title>
-        <link href="./pStyle.css" rel="stylesheet">
 
-        <script src="https://d3js.org/d3.v5.min.js"></script>
- 	</head>
-	<body>
-        <div id="chartContainer"></div>
-		
+<head>
+	<meta charset="utf-8">
+	<title>Australian Energy Production and Consumption</title>
+	<link href="./pStyle.css" rel="stylesheet">
 
-		<div class="toolTip">
-		  <span class="year"></span><br>
-		  <span class="oilCons"></span><br>
-		  <span class="coalCons"></span><br>
-		  <span class="gasCons"></span><br>
-		  <span class="hydroCons"></span><br>
-		  <span class="solarCons"></span><br>
-		  <span class="windCons"></span><br>
-		</div>
-	
-		<!--link to the js file-->
-		<script src="./dataVis.js"></script>
-	</body>
+	<script src="https://d3js.org/d3.v5.min.js"></script>
+</head>
+
+<body>
+	<div id="chartContainer"></div>
+	<div class="rangeDiv">
+		<table>
+			<tr>
+				<td>
+					<span>Emphasize Lower Range</span>
+				</td>
+				<td>
+					<input onchange='init(this.value)' type="range" min=".1" max="3" value="1" step=".1" class="slider"
+						id="myRange">
+				</td>
+				<td>
+					<span>Emphasize Upper Range</span>
+				</td>
+			</tr>
+		</table>
+	</div>
+
+
+	<div class="toolTip">
+		<span class="year"></span><br>
+		<span class="oilCons"></span><br>
+		<span class="coalCons"></span><br>
+		<span class="gasCons"></span><br>
+		<span class="hydroCons"></span><br>
+		<span class="solarCons"></span><br>
+		<span class="windCons"></span><br>
+	</div>
+
+	<!--link to the js file-->
+	<script src="./dataVis.js"></script>
+</body>
+
 </html>

@@ -1,4 +1,6 @@
-function init() {
+var exponent = 1;
+function init(exponent) {
+    d3.select("#chartContainer").select("svg").remove();
     var formatDate, dataset, header, xScale, yScale, xAxis, yAxis, svg, coalConsLine,
         gasConsLine, hydroConsLine, oilConsLine, solarConsLine, windConsLine, toolTip, lineData;
 
@@ -40,7 +42,7 @@ function init() {
         MultiLineChart(dataset);
 
         //to check if the dataset has been imported
-        console.table(dataset, ["date", "coalCons", "coalProd", "elecProd", "gasCons", "gasProd", "hydroCons", "oilCons", "oilProd", "solarCons", "windCons"]);
+        //console.table(dataset, ["date", "coalCons", "coalProd", "elecProd", "gasCons", "gasProd", "hydroCons", "oilCons", "oilProd", "solarCons", "windCons"]);
     });
 
     function MultiLineChart() {
@@ -85,13 +87,22 @@ function init() {
             .scale(xScale);
 
         //y scale setup
-        yScale = d3.scaleLinear()
+        // yScale = d3.scaleLinear()
+        //     .domain([0, d3.max(dataset, function (d) {
+        //         //finds the max value from all columns/attributes
+        //         return Math.max(d.coalCons, d.gasCons, d.hydroCons, d.oilCons, d.solarCons, d.windCons)
+        //     })])
+        //     .nice() //makes scale end in round number
+        //     .range([height, 0]);
+
+        yScale = d3.scalePow()
             .domain([0, d3.max(dataset, function (d) {
                 //finds the max value from all columns/attributes
                 return Math.max(d.coalCons, d.gasCons, d.hydroCons, d.oilCons, d.solarCons, d.windCons)
             })])
             .nice() //makes scale end in round number
-            .range([height, 0]);
+            .range([height, 0])
+            .exponent(exponent);
 
         //defining y axis
         yAxis = d3.axisLeft()
@@ -359,7 +370,7 @@ function init() {
 
             }
 
-            
+
         }
 
 
@@ -367,5 +378,13 @@ function init() {
 
 }
 
-window.onload = init;
+//a global function to track the slider value chages
+function sliderChange(ex) {
+    console.log(ex)
+    exponent = ex;
+    init();
+    return exponent;
+}
+
+window.onload = init(exponent);
 
