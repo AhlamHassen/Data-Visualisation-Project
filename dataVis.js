@@ -121,7 +121,7 @@ function init(exponent) {
 
         //colors 
         //var colors = d3.schemeCategory10;
-        var colors = ["#000000", "#e69f00", "#56b4e9", "#ff0000", "#f0e442", "#4b0092"];
+        var colors = ["#000000", "#e69f00", "#56b4e9", "#81F499", "#C1292E", "#4b0092"];
 
         //draw each line with different color
         drawAllLines();
